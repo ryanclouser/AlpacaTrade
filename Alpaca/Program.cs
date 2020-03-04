@@ -60,7 +60,7 @@ namespace AlpacaTrade
             }
         }
 
-        public static List<Candle> GetPolygonBars(string symbol, string timespan, DateTime from, DateTime to)
+        static async Task<List<Candle>> GetPolygonBars(string symbol, string timespan, DateTime from, DateTime to)
         {
             var request = new RestRequest("/aggs/ticker/{ticker}/range/{multiplier}/{timespan}/{from}/{to}", Method.GET);
             request.AddHeader("Content-Type", "application/json");
@@ -76,16 +76,16 @@ namespace AlpacaTrade
 
             request.AddQueryParameter("apiKey", settings.AlpacaKey);    // use the live key for real time data
 
-            var response = client.Execute(request);
+            var response = await client.ExecuteTaskAsync(request);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                var candles = new List<Candle>();
-
                 JObject o = JObject.Parse(response.Content);
 
                 if ((string)o["status"] == "OK")
                 {
+                    var candles = new List<Candle>();
+
                     foreach (JObject c in (JArray)o["results"])
                     {
                         var next = new Candle();
@@ -209,14 +209,16 @@ namespace AlpacaTrade
 
                         if (!account.IsTradingBlocked)
                         {
-                            var orders = await GetOrders(symbol);
-                            var position = await GetPosition(symbol);
+                            var orders = GetOrders(symbol);
+                            var position = GetPosition(symbol);
+                            var candles = await GetPolygonBars(symbol, "minute", DateTime.Now.AddDays(-7), DateTime.Now.AddDays(1));
 
-                            var candles = GetPolygonBars(symbol, "minute", DateTime.Now.AddDays(-7), DateTime.Now.AddDays(1));
+                            await orders;
+                            await position;
 
                             if (candles != null)
                             {
-                                await Update(symbol, account, position, orders, candles);
+                                await Update(symbol, account, position.Result, orders.Result, candles);
                             }
                         }
                     }
