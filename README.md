@@ -5,7 +5,7 @@ AlpacaTrade
 [![Donate with Ethereum](https://en.cryptobadges.io/badge/micro/0xd163fdde358f9000A4E9290f23B84DFb6E9190D3)](https://en.cryptobadges.io/donate/0xd163fdde358f9000A4E9290f23B84DFb6E9190D3)
 [![Donate with Litecoin](https://en.cryptobadges.io/badge/micro/LVSmZByqa6Cp1BFwgqeUyMjKmpfHP23ApR)](https://en.cryptobadges.io/donate/LVSmZByqa6Cp1BFwgqeUyMjKmpfHP23ApR)
 
-Simple automated trading example for [alpaca.markets](https://alpaca.markets] written in C#.
+Simple automated trading example for [alpaca.markets](https://alpaca.markets) written in C#.
 
 Strategy
 ---
